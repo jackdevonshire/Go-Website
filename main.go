@@ -29,6 +29,7 @@ var allExperience = []experience{
 func main() {
 	router := gin.Default()
 	router.GET("/experience", getJobExperience)
+	router.POST("/experience", postJobExperience)
 
 	router.Run("localhost:8080")
 }
@@ -36,4 +37,17 @@ func main() {
 // Get all experience
 func getJobExperience(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, allExperience)
+}
+
+// Add experience
+func postJobExperience(c *gin.Context) {
+	var newExperience experience
+
+	// Parse received JSON
+	if err := c.BindJSON(&newExperience); err != nil {
+		return
+	}
+
+	allExperience = append(allExperience, newExperience)
+	c.IndentedJSON(http.StatusCreated, newExperience)
 }
